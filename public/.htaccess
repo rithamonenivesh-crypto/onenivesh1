@@ -1,0 +1,37 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Handle API requests via PHP
+  # This matches /api/market-data and sends it to the php/market-data.php script
+  RewriteRule ^api/market-data/?$ php/market-data.php [L]
+
+  # 2. Support Clean URLs (remove .html extension)
+  # If the request is for a file that doesn't exist, try adding .html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.*)$ $1.html [L]
+
+</IfModule>
+
+# 3. Security Headers
+<IfModule mod_headers.c>
+  # Prevent Clickjacking
+  Header set X-Frame-Options "SAMEORIGIN"
+  
+  # Prevent MIME-type sniffing
+  Header set X-Content-Type-Options "nosniff"
+  
+  # Referrer Policy
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  
+  # Disable unused browser features
+  Header set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+  
+  # Force HTTPS (HSTS) - Only if SSL is active
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# 4. Prevent directory listing
+Options -Indexes
