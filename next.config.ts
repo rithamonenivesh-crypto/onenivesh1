@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  // Only export as static HTML when we explicitly ask for it (for Hostinger)
+  ...(process.env.BUILD_TARGET === 'static' ? { output: 'export' } : {}),
   images: {
     unoptimized: true,
   },
