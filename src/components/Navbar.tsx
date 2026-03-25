@@ -25,6 +25,7 @@ export default function Navbar() {
     { href: '/pricing', label: 'Pricing' },
     { href: '/insights', label: 'Insights' },
     { href: '/company', label: 'Company' },
+    { href: '/contact', label: 'Contact Us' },
   ];
 
   const legalLinks = [
@@ -106,7 +107,7 @@ export default function Navbar() {
 
         <div className="nav-right">
           <div className="nav-cta">
-            <Link href={WHATSAPP_URL} target="_blank" className="btn-cyan">Get Expert Help</Link>
+            <Link href="/contact" className="btn-cyan">Get Expert Help</Link>
           </div>
           <button
             className={`mobile-menu-toggle${menuOpen ? ' open' : ''}`}

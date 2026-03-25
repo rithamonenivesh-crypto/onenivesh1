@@ -44,6 +44,7 @@ export default function Footer() {
                 { label: 'About Us', href: '/company' },
                 { label: 'Services', href: '/services' },
                 { label: 'Pricing', href: '/pricing' },
+                { label: 'Contact Us', href: '/contact' },
                 { label: 'Economic Calendar', href: 'https://www.investing.com/economic-calendar/' },
                 { label: 'Score Link', href: 'https://scores.gov.in/' },
                 { label: 'Smart ODR Link', href: 'https://smartodr.in/' },

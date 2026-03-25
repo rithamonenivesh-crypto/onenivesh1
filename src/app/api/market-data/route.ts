@@ -14,21 +14,27 @@ export async function OPTIONS() {
 }
 
 const TICKERS = [
-  { symbol: 'NIFTY 50',  ticker: '^NSEI' },
-  { symbol: 'SENSEX',    ticker: '^BSESN' },
-  { symbol: 'HDFC Bank', ticker: 'HDFCBANK.NS' },
-  { symbol: 'INFY',      ticker: 'INFY.NS' },
-  { symbol: 'RELIANCE',  ticker: 'RELIANCE.NS' },
-  { symbol: 'TCS',       ticker: 'TCS.NS' },
+  { symbol: 'NIFTY 50',   ticker: '^NSEI' },
+  { symbol: 'SENSEX',     ticker: '^BSESN' },
+  { symbol: 'BANK NIFTY', ticker: '^NSEBANK' },
+  { symbol: 'GIFT NIFTY', ticker: 'NIFTY.NSE' },
+  { symbol: 'HDFC Bank',  ticker: 'HDFCBANK.NS' },
+  { symbol: 'INFY',       ticker: 'INFY.NS' },
+  { symbol: 'RELIANCE',   ticker: 'RELIANCE.NS' },
+  { symbol: 'TCS',        ticker: 'TCS.NS' },
 ];
 
+const VIX_TICKER = '^INDIAVIX';
+const FALLBACK_VIX = 14.5;
+
 const fallbackData = [
-  { symbol: 'NIFTY 50',  value: 24115.50, change: 0.82,  up: true  },
-  { symbol: 'SENSEX',    value: 78500.00, change: 0.75,  up: true  },
-  { symbol: 'HDFC Bank', value: 1672.35,  change: 1.2,   up: true  },
-  { symbol: 'INFY',      value: 1543.80,  change: -0.3,  up: false },
-  { symbol: 'RELIANCE',  value: 2934.10,  change: 0.56,  up: true  },
-  { symbol: 'TCS',       value: 3785.40,  change: -0.18, up: false },
+  { symbol: 'NIFTY 50',   value: 24115.50, change: 0.82,  up: true  },
+  { symbol: 'SENSEX',     value: 78500.00, change: 0.75,  up: true  },
+  { symbol: 'BANK NIFTY', value: 51200.00, change: 0.65,  up: true  },
+  { symbol: 'HDFC Bank',  value: 1672.35,  change: 1.2,   up: true  },
+  { symbol: 'INFY',       value: 1543.80,  change: -0.3,  up: false },
+  { symbol: 'RELIANCE',   value: 2934.10,  change: 0.56,  up: true  },
+  { symbol: 'TCS',        value: 3785.40,  change: -0.18, up: false },
 ];
 
 export async function GET() {
@@ -70,9 +76,21 @@ export async function GET() {
       return fallbackData[index];
     });
 
+    // Fetch VIX separately
+    let vix = FALLBACK_VIX;
+    try {
+      const vixQuote = await fetchWithTimeout(VIX_TICKER) as any;
+      if (vixQuote?.regularMarketPrice) {
+        vix = parseFloat(vixQuote.regularMarketPrice.toFixed(2));
+      }
+    } catch (e) {
+      console.error('API: VIX fetch error');
+    }
+
     console.log('API: Market data successfully fetched');
     return Response.json({ 
       data, 
+      vix,
       updatedAt: new Date().toISOString(),
       source: 'Yahoo Finance'
     }, { headers: corsHeaders });
