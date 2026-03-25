@@ -2,10 +2,50 @@
     --bg-color: #000000;
     --primary-cyan: #00E5FF;
     --text-white: #FFFFFF;
-    --text-grey: #94A3B8;
+    --text-grey: #A0AEC0; /* Lightened from #94A3B8 for better WCAG AA contrast */
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
     --font-main: 'Inter', sans-serif;
+}
+
+/* --- Accessibility --- */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--primary-cyan);
+    color: var(--bg-color);
+    padding: 10px 20px;
+    z-index: 99999;
+    transition: top 0.3s ease;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+*:focus-visible {
+    outline: 2px solid var(--primary-cyan) !important;
+    outline-offset: 4px;
+}
+
+/* --- Compliance Bar --- */
+.risk-disclosure-bar {
+    background: #0F172A;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    padding: 8px 5%;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-grey);
+    position: relative;
+    z-index: 1001;
+    line-height: 1.4;
+}
+
+.risk-disclosure-bar strong {
+    color: var(--text-white);
 }
 
 * {

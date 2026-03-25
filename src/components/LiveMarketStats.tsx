@@ -11,7 +11,7 @@ interface MarketItem {
 
 function ArrowUp() {
   return (
-    <svg className="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} style={{ width: '14px', height: '14px', marginRight: '4px' }}>
+    <svg className="icon-sm" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} style={{ width: '14px', height: '14px', marginRight: '4px' }}>
       <polyline points="18 15 12 9 6 15" />
     </svg>
   );
@@ -19,7 +19,7 @@ function ArrowUp() {
 
 function ArrowDown() {
   return (
-    <svg className="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} style={{ width: '14px', height: '14px', marginRight: '4px' }}>
+    <svg className="icon-sm" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} style={{ width: '14px', height: '14px', marginRight: '4px' }}>
       <polyline points="6 9 12 15 18 9" />
     </svg>
   );
@@ -76,7 +76,7 @@ export default function LiveMarketStats() {
           <span className="label">{s.symbol}</span>
           <span className="val">
             {s.value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-            <span className={s.up ? 'text-green' : ''} style={!s.up ? { color: '#F87171', display: 'flex', alignItems: 'center' } : { display: 'flex', alignItems: 'center' }}>
+            <span className={s.up ? 'text-green' : ''} aria-label={s.up ? 'Up' : 'Down'} style={!s.up ? { color: '#F87171', display: 'flex', alignItems: 'center' } : { display: 'flex', alignItems: 'center' }}>
               {s.up ? <ArrowUp /> : <ArrowDown />} 
               {Math.abs(s.change)}%
             </span>

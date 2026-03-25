@@ -79,7 +79,7 @@ export default function HeroVisuals() {
           <span style={{ fontSize: '0.82rem', color: 'var(--text-grey)' }}>NIFTY 50</span>
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontWeight: 700, fontSize: '0.92rem' }}>{stats.nifty.value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-            <span style={{ fontSize: '0.72rem', marginLeft: '5px', color: stats.nifty.up ? '#4ADE80' : '#F87171' }}>
+            <span style={{ fontSize: '0.72rem', marginLeft: '5px', color: stats.nifty.up ? '#4ADE80' : '#F87171' }} aria-label={stats.nifty.up ? 'Up' : 'Down'}>
               {stats.nifty.up ? '▲' : '▼'} {Math.abs(stats.nifty.change)}%
             </span>
           </div>
@@ -90,7 +90,7 @@ export default function HeroVisuals() {
           <span style={{ fontSize: '0.82rem', color: 'var(--text-grey)' }}>SENSEX</span>
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontWeight: 700, fontSize: '0.92rem' }}>{stats.sensex.value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-            <span style={{ fontSize: '0.72rem', marginLeft: '5px', color: stats.sensex.up ? '#4ADE80' : '#F87171' }}>
+            <span style={{ fontSize: '0.72rem', marginLeft: '5px', color: stats.sensex.up ? '#4ADE80' : '#F87171' }} aria-label={stats.sensex.up ? 'Up' : 'Down'}>
               {stats.sensex.up ? '▲' : '▼'} {Math.abs(stats.sensex.change)}%
             </span>
           </div>
@@ -101,7 +101,7 @@ export default function HeroVisuals() {
           <span style={{ fontSize: '0.82rem', color: 'var(--text-grey)' }}>BANK NIFTY</span>
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontWeight: 700, fontSize: '0.92rem' }}>{stats.bankNifty.value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
-            <span style={{ fontSize: '0.72rem', marginLeft: '5px', color: stats.bankNifty.up ? '#4ADE80' : '#F87171' }}>
+            <span style={{ fontSize: '0.72rem', marginLeft: '5px', color: stats.bankNifty.up ? '#4ADE80' : '#F87171' }} aria-label={stats.bankNifty.up ? 'Up' : 'Down'}>
               {stats.bankNifty.up ? '▲' : '▼'} {Math.abs(stats.bankNifty.change)}%
             </span>
           </div>

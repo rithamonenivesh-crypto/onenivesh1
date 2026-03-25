@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function LegalLayout({ children, title, subtitle }: { children: React.ReactNode, title: string, subtitle?: string }) {
   return (
-    <main style={{ paddingBottom: '100px', minHeight: '80vh' }}>
+    <main id="main-content" style={{ paddingBottom: '100px', minHeight: '80vh' }}>
       {/* Header Section */}
       <section style={{ 
         padding: 'clamp(100px, 15vh, 160px) 5% clamp(60px, 10vh, 80px)', 

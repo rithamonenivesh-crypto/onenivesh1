@@ -46,10 +46,10 @@ export default function Footer() {
                 { label: 'Pricing', href: '/pricing' },
                 { label: 'Contact Us', href: '/contact' },
                 { label: 'Economic Calendar', href: 'https://www.investing.com/economic-calendar/' },
-                { label: 'Score Link', href: 'https://scores.gov.in/' },
-                { label: 'Smart ODR Link', href: 'https://smartodr.in/' },
+                { label: 'SEBI SCORES Portal', href: 'https://scores.gov.in/' },
+                { label: 'Smart ODR Portal', href: 'https://smartodr.in/' },
               ].map(link => (
-                <li key={link.label}><Link href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} style={{ color: 'var(--text-white)', textDecoration: 'none', fontSize: '0.9rem', opacity: 0.8 }}>{link.label}</Link></li>
+                <li key={link.label}><Link href={link.href} aria-label={link.label} target={link.href.startsWith('http') ? '_blank' : undefined} style={{ color: 'var(--text-white)', textDecoration: 'none', fontSize: '0.9rem', opacity: 0.8 }}>{link.label}</Link></li>
               ))}
             </ul>
           </div>
@@ -71,7 +71,7 @@ export default function Footer() {
                 { label: 'Standard Disclosures', href: '/legal/standard-disclosures' },
                 { label: 'Complaint Board', href: '/legal/complaint-status' },
               ].map(link => (
-                <li key={link.label}><Link href={link.href} style={{ color: 'var(--text-white)', textDecoration: 'none', fontSize: '0.9rem', opacity: 0.8 }}>{link.label}</Link></li>
+                <li key={link.label}><Link href={link.href} aria-label={link.label} style={{ color: 'var(--text-white)', textDecoration: 'none', fontSize: '0.9rem', opacity: 0.8 }}>{link.label}</Link></li>
               ))}
             </ul>
           </div>
@@ -98,17 +98,22 @@ export default function Footer() {
         </div>
 
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p style={{ color: 'var(--text-grey)', fontSize: '0.8rem', fontStyle: 'italic', opacity: 0.7 }}>
+          <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', fontStyle: 'italic', opacity: 0.9 }}>
             "Registration granted by SEBI and certification from NISM in no way guarantee performance of the intermediary or provide any assurance of returns to investors."
           </p>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem' }}>
-              © 2025 One Nivesh. SEBI Registered Investment Advisor (INH000021614). All rights reserved.
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem' }}>
+              © 2025 <strong>One Nivesh</strong>. SEBI Registered Research Analyst (<strong>INH000021614</strong>). All rights reserved.
             </p>
             <div style={{ display: 'flex', gap: '16px' }}>
               {/* Simple placeholder for social icons as seen in image */}
-              {['FB', 'X', 'IG', 'TG'].map(soc => (
-                <span key={soc} style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', color: 'var(--text-grey)', border: '1px solid rgba(255,255,255,0.1)' }}>{soc}</span>
+              {[
+                { name: 'FB', label: 'Follow us on Facebook' },
+                { name: 'X', label: 'Follow us on X' },
+                { name: 'IG', label: 'Follow us on Instagram' },
+                { name: 'TG', label: 'Join our Telegram channel' }
+              ].map(soc => (
+                <span key={soc.name} role="img" aria-label={soc.label} style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', color: 'var(--text-grey)', border: '1px solid rgba(255,255,255,0.1)' }}>{soc.name}</span>
               ))}
             </div>
           </div>
