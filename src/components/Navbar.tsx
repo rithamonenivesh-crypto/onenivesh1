@@ -86,8 +86,8 @@ export default function Navbar() {
               </li>
             ))}
 
-            {/* Legal Dropdown */}
-            <li className={`nav-item-dropdown${legalOpen ? ' active' : ''}`} onClick={() => setLegalOpen(!legalOpen)}>
+            {/* Legal Dropdown (Desktop Only) */}
+            <li className={`desktop-only nav-item-dropdown${legalOpen ? ' active' : ''}`} onClick={() => setLegalOpen(!legalOpen)}>
               <div className="dropdown-trigger">
                 More
                 <svg className="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -111,6 +111,19 @@ export default function Navbar() {
                 ))}
               </div>
             </li>
+
+            {/* Legal Links (Mobile Only - Direct) */}
+            {legalLinks.map((link) => (
+              <li key={link.href} className="mobile-only">
+                <Link
+                  href={link.href}
+                  style={{ color: pathname === link.href ? 'var(--primary-cyan)' : undefined }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
