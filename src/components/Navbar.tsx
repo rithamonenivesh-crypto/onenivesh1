@@ -63,8 +63,17 @@ export default function Navbar() {
           </Link>
         </div>
 
+        {/* Backdrop for mobile menu */}
+        {menuOpen && <div className="nav-backdrop" onClick={() => setMenuOpen(false)} />}
+
         <div className="nav-center">
           <ul className={`nav-links${menuOpen ? ' active' : ''}`}>
+            {/* Mobile Header in Drawer */}
+            <li className="mobile-drawer-header">
+              <Image src="/images/logo.png" alt="One Nivesh Logo" width={120} height={36} style={{ objectFit: 'contain' }} />
+              <button className="close-drawer" onClick={() => setMenuOpen(false)}>×</button>
+            </li>
+            
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
