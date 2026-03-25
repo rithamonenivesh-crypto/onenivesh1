@@ -207,11 +207,11 @@ h1 {
 @media (max-width: 1024px) {
     .nav-item-dropdown {
         width: 100%;
-        text-align: left;
+        text-align: left !important;
     }
 
     .dropdown-trigger {
-        justify-content: space-between;
+        justify-content: space-between !important;
         width: 100%;
         padding: 15px 0;
         font-size: 1.2rem;
@@ -234,14 +234,14 @@ h1 {
         min-width: 100%;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        padding-left: 20px;
+        align-items: flex-start !important;
+        padding-left: 20px !important;
         border-left: 1px solid rgba(255, 255, 255, 0.05);
         margin-left: 5px;
     }
 
     .nav-item-dropdown.active .dropdown-menu {
-        max-height: 1000px; /* Increased to allow all legal links to show */
+        max-height: 1200px;
         padding-bottom: 20px;
         margin-top: 5px;
     }
@@ -255,7 +255,7 @@ h1 {
         opacity: 0.7;
         padding: 12px 0;
         width: 100%;
-        text-align: left;
+        text-align: left !important;
         display: block;
     }
 }
@@ -581,7 +581,7 @@ h1 {
         background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        z-index: 998;
+        z-index: 1000;
         animation: fadeIn 0.3s ease forwards;
     }
 
@@ -589,6 +589,7 @@ h1 {
         position: fixed;
         top: 0;
         right: -100%;
+        left: auto !important;
         width: min(85vw, 360px);
         height: 100vh;
         background: rgba(0, 0, 0, 0.95);
@@ -598,15 +599,23 @@ h1 {
         flex-direction: column;
         justify-content: flex-start !important;
         align-items: flex-start !important;
-        padding: 40px 30px !important;
+        padding: 40px 30px 100px !important; /* Added bottom padding for scrolling */
         transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-        z-index: 999;
+        z-index: 1001;
         box-shadow: -20px 0 40px rgba(0, 0, 0, 0.5);
         gap: 15px !important;
+        overflow-y: auto !important; /* Enable vertical scrolling */
+        -ms-overflow-style: none;    /* IE and Edge */
+        scrollbar-width: none;       /* Firefox */
+    }
+
+    .nav-links::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
     }
 
     .nav-links.active {
-        right: 0;
+        right: 0 !important;
+        left: auto !important;
     }
 
     .mobile-drawer-header {
