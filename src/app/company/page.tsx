@@ -62,7 +62,6 @@ export const metadata: Metadata = {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px,1fr))', gap: '16px' }}>
             {[
               { label: 'SEBI Registration', value: 'INH000021614' },
-              { label: 'Founded', value: '2017' },
               { label: 'Clients Served', value: '1,000+' },
               { label: 'Research Reports', value: '1,800+' },
             ].map((c, idx) => (

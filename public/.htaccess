@@ -3,14 +3,15 @@
   RewriteBase /
 
   # 1. Handle API requests via PHP
-  # This matches /api/market-data and sends it to the php/market-data.php script
   RewriteRule ^api/market-data/?$ php/market-data.php [L]
 
-  # 2. Support Clean URLs (remove .html extension)
-  # If the request is for a file that doesn't exist, try adding .html
-  RewriteCond %{REQUEST_FILENAME} !-f
+  # 2. Remove trailing slashes from URLs
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+  # 3. Support Clean URLs (Map /path to /path.html)
+  # Even if a directory exists, prioritize the .html file for cleaner reloads
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
   RewriteRule ^(.*)$ $1.html [L]
 
 </IfModule>
