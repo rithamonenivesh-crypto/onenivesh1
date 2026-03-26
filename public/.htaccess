@@ -1,16 +1,27 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  
+  # Prevent Apache from automatically adding trailing slashes to directories
+  # This avoids conflicts with our custom trailing slash and .html rules
+  DirectorySlash Off
 
   # 1. Handle API requests via PHP
   RewriteRule ^api/market-data/?$ php/market-data.php [L]
 
-  # 2. Remove trailing slashes from URLs
-  RewriteCond %{REQUEST_FILENAME} !-d
+  # 2. EXCLUDE existing files and directories from rewrites (Images, CSS, JS, etc.)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 3. Explicitly allow Next.js _next folder
+  RewriteCond %{REQUEST_URI} ^/_next [NC]
+  RewriteRule ^ - [L]
+
+  # 4. Remove trailing slashes from URLs
   RewriteRule ^(.*)/$ /$1 [L,R=301]
 
-  # 3. Support Clean URLs (Map /path to /path.html)
-  # Even if a directory exists, prioritize the .html file for cleaner reloads
+  # 5. Support Clean URLs (Map /path to /path.html)
   RewriteCond %{DOCUMENT_ROOT}/$1.html -f
   RewriteRule ^(.*)$ $1.html [L]
 
