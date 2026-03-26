@@ -14,12 +14,33 @@ export async function OPTIONS() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, phone, email, subject, message } = body;
+    const { name, phone, email, subject, message, website } = body;
 
-    // Validate input
+    // 1. Honeypot Check (Bot Protection)
+    if (website) {
+      return Response.json({ error: 'System Error. Please try again.' }, { status: 400, headers: corsHeaders });
+    }
+
+    // 2. Missing Fields Check
     if (!name || !phone || !email || !message) {
       return Response.json({ error: 'Missing required fields' }, { status: 400, headers: corsHeaders });
     }
+
+    // 3. Length Validation (Anti-DoS)
+    if (name.length > 100 || email.length > 100 || phone.length > 20 || message.length > 2000) {
+      return Response.json({ error: 'Input too long' }, { status: 400, headers: corsHeaders });
+    }
+
+    // 4. Basic Sanitization (Escape HTML)
+    const sanitize = (str: string) => str.replace(/[&<>"']/g, (m) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m] || m));
+
+    const sName = sanitize(name);
+    const sPhone = sanitize(phone);
+    const sEmail = sanitize(email);
+    const sSubject = sanitize(subject || 'General Inquiry');
+    const sMessage = sanitize(message);
 
     // SMTP Configuration from Environment Variables
     const { SMTP_HOST, SMTP_USER, SMTP_PASS, SMTP_PORT } = process.env;
@@ -44,19 +65,19 @@ export async function POST(req: Request) {
     const mailOptions = {
       from: `"One Nivesh Website" <${SMTP_USER}>`, // Send *from* your authenticated SMTP user
       to: 'info@onenivesh.com',                    // Send *to* your official email address
-      replyTo: email,                              // Setting replyTo so you can reply directly to the customer
-      subject: `New Website Enquiry: ${subject || 'General Inquiry'}`,
-      text: `Name: ${name}\nPhone: ${phone}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`,
+      replyTo: sEmail,                              // Setting replyTo so you can reply directly to the customer
+      subject: `New Website Enquiry: ${sSubject}`,
+      text: `Name: ${sName}\nPhone: ${sPhone}\nEmail: ${sEmail}\nSubject: ${sSubject}\n\nMessage:\n${sMessage}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
           <h2 style="color: #00E5FF; margin-top: 0;">New Website Enquiry</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Phone Number:</strong> ${phone}</p>
-          <p><strong>Email Address:</strong> <a href="mailto:${email}">${email}</a></p>
-          <p><strong>Interested In:</strong> ${subject || 'General'}</p>
+          <p><strong>Name:</strong> ${sName}</p>
+          <p><strong>Phone Number:</strong> ${sPhone}</p>
+          <p><strong>Email Address:</strong> <a href="mailto:${sEmail}">${sEmail}</a></p>
+          <p><strong>Interested In:</strong> ${sSubject}</p>
           <hr style="border-top: 1px solid #e0e0e0; margin: 20px 0;" />
           <p><strong>Message:</strong></p>
-          <p style="white-space: pre-wrap; background-color: #f9f9f9; padding: 15px; border-radius: 6px;">${message}</p>
+          <p style="white-space: pre-wrap; background-color: #f9f9f9; padding: 15px; border-radius: 6px;">${sMessage}</p>
         </div>
       `
     };

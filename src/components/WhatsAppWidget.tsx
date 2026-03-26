@@ -6,6 +6,7 @@ export default function WhatsAppWidget() {
     <Link 
       href="https://wa.me/919669336841" 
       target="_blank"
+      rel="noopener noreferrer"
       aria-label="Contact us on WhatsApp"
       className="whatsapp-float-container"
       style={{

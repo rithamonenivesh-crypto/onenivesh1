@@ -9,10 +9,29 @@ export default function ContactPage() {
     phone: '',
     email: '',
     subject: 'General Inquiry',
-    message: ''
+    message: '',
+    website: '' // Honeypot field (must be empty)
   });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null, msg: string }>({ type: null, msg: '' });
+  const [coolDown, setCoolDown] = useState(0);
+
+  // Check for existing cool-down on mount
+  require('react').useEffect(() => {
+    const lastSubmit = localStorage.getItem('last_submit_time');
+    if (lastSubmit) {
+      const diff = Math.floor((Date.now() - parseInt(lastSubmit)) / 1000);
+      if (diff < 30) setCoolDown(30 - diff);
+    }
+  }, []);
+
+  // Cool-down timer effect
+  require('react').useEffect(() => {
+    if (coolDown > 0) {
+      const timer = setInterval(() => setCoolDown(prev => prev - 1), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [coolDown]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,11 +39,20 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check
+    if (formData.website) return;
+
+    // Cool-down check
+    if (coolDown > 0) {
+      setStatus({ type: 'error', msg: `Please wait ${coolDown} seconds before sending another message.` });
+      return;
+    }
+
     setLoading(true);
     setStatus({ type: null, msg: '' });
 
     try {
-      // In a static build environment on Hostinger, the frontend must specify the full API URL for the Vercel backend
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
       
       const res = await fetch(`${apiUrl}/api/contact`, {
@@ -38,13 +66,16 @@ export default function ContactPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setStatus({ type: 'success', msg: 'Thank you! Your message has been sent successfully. We will contact you soon.' });
-        setFormData({ name: '', phone: '', email: '', subject: 'General Inquiry', message: '' });
+        setStatus({ type: 'success', msg: 'Thank you! Your message has been sent successfully.' });
+        setFormData({ name: '', phone: '', email: '', subject: 'General Inquiry', message: '', website: '' });
+        // Start 30s cool-down
+        setCoolDown(30);
+        localStorage.setItem('last_submit_time', Date.now().toString());
       } else {
-        setStatus({ type: 'error', msg: data.error || 'Something went wrong. Please try again later.' });
+        setStatus({ type: 'error', msg: data.error || 'Something went wrong.' });
       }
     } catch (error) {
-      setStatus({ type: 'error', msg: 'Network error. Please try again later or contact us directly on WhatsApp.' });
+      setStatus({ type: 'error', msg: 'Network error. Please try again later.' });
     } finally {
       setLoading(false);
     }
@@ -97,6 +128,7 @@ export default function ContactPage() {
                     id="name" 
                     name="name" 
                     required 
+                    maxLength={100}
                     value={formData.name}
                     onChange={handleChange}
                     style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--text-white)', fontSize: '1rem', outline: 'none' }}
@@ -104,6 +136,18 @@ export default function ContactPage() {
                   />
                 </div>
                 
+                {/* Honeypot field - hidden */}
+                <div style={{ display: 'none' }}>
+                  <input 
+                    type="text" 
+                    name="website" 
+                    tabIndex={-1} 
+                    autoComplete="off" 
+                    value={formData.website} 
+                    onChange={handleChange} 
+                  />
+                </div>
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label htmlFor="phone" style={{ fontSize: '0.9rem', color: 'var(--text-grey)' }}>Phone Number *</label>
                   <input 
@@ -111,6 +155,8 @@ export default function ContactPage() {
                     id="phone" 
                     name="phone" 
                     required 
+                    maxLength={15}
+                    pattern="[0-9+ ]*"
                     value={formData.phone}
                     onChange={handleChange}
                     style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--text-white)', fontSize: '1rem', outline: 'none' }}
@@ -126,6 +172,7 @@ export default function ContactPage() {
                   id="email" 
                   name="email" 
                   required 
+                  maxLength={100}
                   value={formData.email}
                   onChange={handleChange}
                   style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--text-white)', fontSize: '1rem', outline: 'none' }}
@@ -158,6 +205,7 @@ export default function ContactPage() {
                   name="message" 
                   required 
                   rows={5}
+                  maxLength={1000}
                   value={formData.message}
                   onChange={handleChange}
                   style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', resize: 'vertical' }}
@@ -168,22 +216,22 @@ export default function ContactPage() {
               <div style={{ marginTop: '10px', textAlign: 'center' }}>
                 <button 
                   type="submit" 
-                  disabled={loading}
+                  disabled={loading || coolDown > 0}
                   style={{ 
                     padding: '14px 40px', 
-                    background: 'var(--primary-cyan)', 
+                    background: (loading || coolDown > 0) ? 'rgba(0, 229, 255, 0.4)' : 'var(--primary-cyan)', 
                     color: '#000', 
                     border: 'none', 
                     borderRadius: '50px', 
                     fontSize: '1rem', 
                     fontWeight: 800, 
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    opacity: loading ? 0.7 : 1,
+                    cursor: (loading || coolDown > 0) ? 'not-allowed' : 'pointer',
+                    opacity: (loading || coolDown > 0) ? 0.7 : 1,
                     transition: 'all 0.3s ease',
-                    boxShadow: '0 0 20px rgba(0, 229, 255, 0.4)'
+                    boxShadow: (loading || coolDown > 0) ? 'none' : '0 0 20px rgba(0, 229, 255, 0.4)'
                   }}
                 >
-                  {loading ? 'Sending Message...' : 'Submit Enquiry'}
+                  {loading ? 'Sending Message...' : coolDown > 0 ? `Wait ${coolDown}s` : 'Submit Enquiry'}
                 </button>
               </div>
 
