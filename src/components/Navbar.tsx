@@ -60,12 +60,10 @@ export default function Navbar() {
       </div>
 
       <nav
-        className="glass-nav"
+        className={`glass-nav${scrolled ? ' scrolled' : ''}`}
         style={{
           background: scrolled ? 'rgba(0,229,255,0.1)' : 'rgba(255,255,255,0.05)',
           borderColor: scrolled ? 'rgba(0,229,255,0.3)' : 'rgba(255,255,255,0.1)',
-          marginTop: scrolled ? '5px' : '10px',
-          marginBottom: '5px'
         }}
       >
         <div className="nav-left">
